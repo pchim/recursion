@@ -116,7 +116,12 @@ var parseJSON = function(json) {
   		checkDecimals();
   	}
 
-  	return Number(numStr);
+  	chompSpace();
+  	if (isNan(Number(num))){
+  		showError('undetermined number');
+  	} else {
+  		return Number(num);
+  	}
   };
 
 
@@ -137,6 +142,8 @@ var parseJSON = function(json) {
 				return false;
 			}
   	};
+
+  	chompSpace();
 	  // check if string is equal to true or false
 	  if (json[i] === 't'){
 	  	if (compBool('t', tString)) { return true; }
@@ -153,6 +160,7 @@ var parseJSON = function(json) {
   		nul += json[i];
   		incNoSpace();
   	}
+  	chompSpace();
   	if (nul === nString){
   		return null;
   	}
