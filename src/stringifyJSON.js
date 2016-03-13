@@ -5,12 +5,11 @@
 
 var stringifyJSON = function(obj) {
 	var JSONarray = function(obj){
-		if (obj.length === 0){
-			return '';
+		var arrayString = '';
+		for (var i = 0; i < obj.length; i++){
+			arrayString += stringifyJSON(obj[i]) + ',';
 		}
-		var item = obj.shift();
-		var comma = (obj.length) ? ',' : '';
-  	return stringifyJSON(item) + comma + JSONarray(obj);
+		return arrayString.substring(0,arrayString.length-1);
   };
 
   var JSONobj = function(obj){
@@ -20,8 +19,7 @@ var stringifyJSON = function(obj) {
   			objString += stringifyJSON(key) + ":" + stringifyJSON(obj[key]) + ',';
   		}
   	}
-  	objString = objString.substring(0,objString.length-1);
-  	return objString;
+  	return objString.substring(0,objString.length-1);
   }
 
   if (Array.isArray(obj)){
