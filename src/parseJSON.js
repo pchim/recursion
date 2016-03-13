@@ -127,9 +127,23 @@ var parseJSON = function(json) {
   // helper function to parse strings
   var parseString = function(strString){
   	var str = '';
+  	// function to handle esc characters in strings
+  	var esc = function(char){
+  		// handle characters after esc character
+  		if (char === '\\'){
+  			incNoSpace();
+  			// return esc if double escape
+  			if (json[i] === '\\'){
+  				return '\\';
+  			} 
+  		} 			
+  		return json[i];
+  	};
+
   	while(json[i] !== '\"' && i<json.length){
-  		str+=json[i];
-  		increment();
+  		// first check if it's an escape character
+  		str+= esc(json[i]);
+  		incNoSpace();
   	}
   	chompChar('\"', 'missing \" to end string');
   	return str;
