@@ -153,6 +153,7 @@ var parseJSON = function(json) {
   			}
   		} 		
   	}
+  	checkDecimals();
   	// parse only digits
   	while(!isNaN(json[i])){
   		num += json[i];
