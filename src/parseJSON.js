@@ -79,12 +79,26 @@ var parseJSON = function(json) {
   		return obj;
   	}
 
-	  chompChar('\"', 'missing \" before key');
- 		var key = parseString(subJ(i));
-	  chompChar(':', 'missing : after key');
-	  var value = parseValue(json[i]);
+  	var morePairs = true;		// check if more pairs
+  	while(morePairs){
+  		// key must be a string in double quotes
+	  	chompChar('\"', 'missing \" before key');
+ 			var key = parseString(subJ(i));
+ 			// value must be a proper value
+	  	chompChar(':', 'missing : after key');
+	  	var value = parseValue(json[i]);
+	  	// assign the key:value pair
+	  	obj[key] = value;
+	  	chompSpace();
+	  	// if more pairs, continue w/in this parse loop
+	  	if (json[i] === ','){
+	  		increment();
+	  	} else {
+	  		morePairs = false;
+	  	}
+		}
+		chompSpace();
   	chompChar('}', 'missing } to close object');
-  	debug ? console.log(key+':'+value) : null;
   	return obj;
   };
 
