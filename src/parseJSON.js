@@ -1,3 +1,4 @@
+var debug = true;
 // this is what you would do if you were one to do things the easy way:
 // var parseJSON = JSON.parse;
 
@@ -53,13 +54,17 @@ var parseJSON = function(json) {
   // function to parse object elements
   var parseObject = function(objString){
   	var obj = {};
-  	//if 
+  	if (json[i] === '}'){
+  		increment();
+  		return obj;
+  	}
 
 	  chompChar('\"', 'missing \" before key');
  		var key = parseString(subJ(i));
 	  chompChar(':', 'missing : after key');
 	  var value = parseValue(json[i]);
   	chompChar('}', 'missing } to close object');
+  	debug ? console.log(key+':'+value) : null;
   	return obj;
   };
 
