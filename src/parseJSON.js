@@ -13,6 +13,21 @@ var parseJSON = function(json) {
   	}
   }
 
+  // helper function to check character at index === char,
+  // if not, throw an error
+  var chompChar = function(char, errorMessage){
+  	if (json[i] === char){
+  		increment();
+  	} else {
+  		showError(errorMessage);
+  	}
+  }
+
+  // helper function to throw an error
+  var showError = function(message){
+   	throw new SyntaxError('Char ' + i + ': ' + '\'' + message + '\'');
+  }
+
   // helper function to get the substring from i to end of json
   var subJ = function(index){
   	return json.substring(index,json.length);
@@ -27,11 +42,9 @@ var parseJSON = function(json) {
   // function to parse object elements
   var parseObject = function(objString){
   	var obj = {};
-/*  	var key = parseString(subJ(i));
-  	if (json[i] === ':'){
-  		increment();
-  	}
- */
+	  chompChar('\"', 'missing \" before key');
+ 		var key = parseString(subJ(i));
+	  chompChar(':', 'missing : after key');
   	return obj;
   };
 
@@ -42,10 +55,7 @@ var parseJSON = function(json) {
   		str+=json[i];
   		increment();
   	}
-  	if (json.charAt(i) !== '\"'){
-  		throw(SyntaxError);
-  	}
-  	increment();
+  	chompChar('\"', 'missing \" to end string');
   	return str;
   };
 
@@ -53,19 +63,15 @@ var parseJSON = function(json) {
   while(i < json.length){
   	console.log(json.length);
   	if (json[i] === '['){	// start an array
-  		increment();
-  		var arr = parseArray(subJ(i));
-  		if (json[i] === ']'){	// if the array closes, return it
-  			increment();
-  			return arr;
-  		}
+	  	increment();
+	  	var arr = parseArray(subJ(i));
+	  	chompChar(']', 'missing ] to close array');
+  		return arr;
   	} else if (json[i] === '{'){
   		increment();
   		var obj = parseObject(subJ(i));
-  		if (json[i] === '}'){
-  			increment();
-  			return obj;
-  		}
+  		chompChar('}', 'missing } to close object');
+  		return obj;
   	} else if (json[i] === '\"'){
   		increment();
   		var str = parseString(subJ(i));
