@@ -13,6 +13,15 @@ var stringifyJSON = function(obj) {
   	return stringifyJSON(item) + comma + JSONarray(obj);
   };
 
+  var JSONobj = function(obj){
+  	var objString = '';
+  	for (key in obj){
+  		objString += stringifyJSON(key) + ":" + stringifyJSON(obj[key]) + ',';
+  	}
+  	objString = objString.substring(0,objString.length-1);
+  	return objString;
+  }
+
   if (Array.isArray(obj)){
   	return '[' + JSONarray(obj) + ']';
   } else if (obj === null){
@@ -21,6 +30,8 @@ var stringifyJSON = function(obj) {
   	return '\"' + obj + '\"';
   } else if (typeof obj === 'boolean' || typeof obj === 'number'){
   	return obj.toString();
-  } 
+  } else if (typeof obj !== 'function'){
+  	return '{' + JSONobj(obj) + '}';
+  }
 
 };
