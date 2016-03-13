@@ -1,25 +1,24 @@
-var debug = true;
+
 // this is what you would do if you were one to do things the easy way:
 // var parseJSON = JSON.parse;
 
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
   // your code goes here
-  var i = 0;
+  var i = 0;	// index of JSON string
 
-  // increment and ignore all upcoming empty spaces
+  // increment index and ignore all upcoming empty spaces
   var increment = function(){
   	i++;
   	chompSpace();
   };
 
-  // increment w/out chomping spaces
+  // increment index w/out chomping spaces (e.g. for strings)
   var incNoSpace = function(){
   	i++;
   };
 
-  // helper function to check character at index === char,
-  // if not, throw an error
+  // helper function to check that character at index === target char
   var chompChar = function(char, errorMessage){
   	if (json[i] === char){
   		increment();
@@ -37,21 +36,21 @@ var parseJSON = function(json) {
   	}
   };
 
-  // helper function to throw an error
+  // helper function to throw an error and show message
   var showError = function(message){
    	throw new SyntaxError('Char ' + i + ': ' + '\'' + message + '\'');
   }
 
-  // helper function to get the substring from i to end of json
+  // helper function to get the substring from i to end of json string
   var subJ = function(index){
   	return json.substring(index,json.length);
   }
 
   // function to parse array elements
-  var parseArray = function(arrString){
-  	var arr = [];
-  	chompSpace();
-  	if (json[i] === ']'){
+  var parseArray = function(){
+  	var arr = [];		// initialize array to return
+  	chompSpace();		// get rid of white spaces
+  	if (json[i] === ']'){	// check that the array is just empty
   		increment();
   		return arr;
   	}
@@ -75,10 +74,10 @@ var parseJSON = function(json) {
   };
 
   // function to parse object elements
-  var parseObject = function(objString){
-  	var obj = {};
-  	chompSpace();
-  	if (json[i] === '}'){
+  var parseObject = function(){
+  	var obj = {};		// initialize object to return
+  	chompSpace();		// get rid of white spaces
+  	if (json[i] === '}'){	// check that the object is just empty
   		increment();
   		return obj;
   	}
@@ -110,26 +109,26 @@ var parseJSON = function(json) {
   var parseValue = function(firstChar){
   	if (json[i] === '['){	// start an array
 	  	increment();
-	  	return parseArray(subJ(i));
-  	} else if (json[i] === '{'){
+	  	return parseArray();
+  	} else if (json[i] === '{'){	// start an object
   		increment();
-  		return parseObject(subJ(i));
-  	} else if (firstChar === '\"'){
+  		return parseObject();
+  	} else if (firstChar === '\"'){	// start a string
   		incNoSpace();
-  		return parseString(subJ(i));
-  	} else if (!isNaN(firstChar) || firstChar === '-'){
-  		return parseNumber(subJ(i));
-  	} else if (firstChar === 't' || firstChar === 'f'){
-  		return parseBoolean(subJ(i));
-  	} else if (firstChar === 'n'){
-  		return parseNull(subJ(i));
-  	} else {
+  		return parseString();
+  	} else if (!isNaN(firstChar) || firstChar === '-'){	// start a number
+  		return parseNumber();
+  	} else if (firstChar === 't' || firstChar === 'f'){	// start a boolean
+  		return parseBoolean();
+  	} else if (firstChar === 'n'){	// start a null char
+  		return parseNull();
+  	} else {	// unrecognized first characters
   		showError('unexpected token');
   	}
   }
 
   // helper function to parse strings
-  var parseString = function(strString){
+  var parseString = function(){
   	var str = '';
   	// function to handle esc characters in strings
   	var esc = function(char){
@@ -140,10 +139,12 @@ var parseJSON = function(json) {
   			if (json[i] === '\\'){
   				return '\\';
   			} 
-  		} 			
+  		} 		
+  		// return like normal if no esc chars	
   		return json[i];
   	};
 
+  	// loop through string
   	while(json[i] !== '\"' && i<json.length){
   		// first check if it's an escape character
   		str+= esc(json[i]);
@@ -154,9 +155,9 @@ var parseJSON = function(json) {
   };
 
   // function to parse numbers
-  var parseNumber = function(numStr){
-  	var num = json[i];
-  	increment();
+  var parseNumber = function(){
+  	var num = json[i];	// initialize number string
+  	incNoSpace();
   	var decimalFound = false;
 
   	// function to check more than one decimal (if any)
@@ -196,10 +197,10 @@ var parseJSON = function(json) {
 
   // function to parse boolean strings
   var parseBoolean = function(boolStr){
-  	var bool = '';
+  	var bool = '';		// intialize boolean string
   	var tString = 'true';
   	var fString = 'false';
-  	// function to compare bool string to json string
+  	// function to build up bool string and compare to json string
   	var compBool = function(firstChar, boolString){
   		for (var j = 0; j < boolString.length; j++){
   			bool += json[i];
@@ -224,8 +225,9 @@ var parseJSON = function(json) {
 
   // function to parse null strings
   var parseNull = function(nullStr){
-  	var nul = '';
+  	var nul = '';		// initialize null string
   	var nString = 'null';
+  	// build up null string and compare to json string
   	for (var j = 0; j < nString.length; j++){
   		nul += json[i];
   		incNoSpace();
@@ -238,10 +240,10 @@ var parseJSON = function(json) {
   };
 
 
-  // parse based on initial characters
+  // intiialize parsing
   while(i < json.length){
   	return parseValue(json[i]);
-  	increment();	// reach end of json
+  	increment();	// ensure a reach to end of json
   }
 
 };
