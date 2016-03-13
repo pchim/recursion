@@ -11,12 +11,12 @@ var parseJSON = function(json) {
   var increment = function(){
   	i++;
   	chompSpace();
-  }
+  };
 
   // increment w/out chomping spaces
   var incNoSpace = function(){
   	i++;
-  }
+  };
 
   // helper function to check character at index === char,
   // if not, throw an error
@@ -26,14 +26,16 @@ var parseJSON = function(json) {
   	} else {
   		showError(errorMessage);
   	}
-  }
+  };
 
   // ignore empty spaces not in strings
   var chompSpace = function(){
-   	while(json[i] === ' '){
+  	// check for spaces, tabs, newlines and carriage returns
+  	var whiteSpaces = [' ', '\t', '\n', '\r'];
+   	while(whiteSpaces.indexOf(json[i]) > -1){
   		i++;
-  	} 	
-  }
+  	}
+  };
 
   // helper function to throw an error
   var showError = function(message){
@@ -48,6 +50,7 @@ var parseJSON = function(json) {
   // function to parse array elements
   var parseArray = function(arrString){
   	var arr = [];
+  	chompSpace();
   	if (json[i] === ']'){
   		increment();
   		return arr;
@@ -74,6 +77,7 @@ var parseJSON = function(json) {
   // function to parse object elements
   var parseObject = function(objString){
   	var obj = {};
+  	chompSpace();
   	if (json[i] === '}'){
   		increment();
   		return obj;
