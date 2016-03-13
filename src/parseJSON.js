@@ -111,13 +111,34 @@ var parseJSON = function(json) {
   	}
 
   	return Number(numStr);
-  }
+  };
 
 
 
   var parseBoolean = function(boolStr){
-  	return true;
-  }
+  	var bool = '';
+  	var tString = 'true';
+  	var fString = 'false';
+  	// function to compare bool string to json string
+  	var compBool = function(firstChar, boolString){
+  		for (var j = 0; j < boolString.length; j++){
+  			bool += json[i];
+  			incNoSpace();
+  		}
+  		if (bool === boolString){
+  			return true;
+			} else {
+				return false;
+			}
+  	};
+	  // check if string is equal to true or false
+	  if (json[i] === 't'){
+	  	if (compBool('t', tString)) { return true; }
+	  } else if (json[i] === 'f'){
+	  	if (compBool('f', fString)) { return false; }
+	  }
+  	showError('non-boolean string');
+  };
 
   var parseNull = function(nullStr){
   	return null;
