@@ -53,18 +53,22 @@ var parseJSON = function(json) {
   // function to parse object elements
   var parseObject = function(objString){
   	var obj = {};
+  	//if 
+
 	  chompChar('\"', 'missing \" before key');
  		var key = parseString(subJ(i));
 	  chompChar(':', 'missing : after key');
-	  
+	  var value = parseValue(json[i]);
+  	chompChar('}', 'missing } to close object');
   	return obj;
   };
 
   // function to parse a number, boolean, or string
   var parseValue = function(firstChar){
-  	if (fistChar === '\"'){
+  	if (firstChar === '\"'){
+  		incNoSpace();
   		return parseString(subJ(i));
-  	} else if (!isNan(firstChar) || firstChar === '-'){
+  	} else if (!isNaN(firstChar) || firstChar === '-'){
   		return parseNumber(subJ(i));
   	} else if (firstChar === 't' || firstChar === 'f'){
   		return parseBoolean(subJ(i));
@@ -117,7 +121,7 @@ var parseJSON = function(json) {
   	}
 
   	chompSpace();
-  	if (isNan(Number(num))){
+  	if (isNaN(Number(num))){
   		showError('undetermined number');
   	} else {
   		return Number(num);
@@ -170,7 +174,6 @@ var parseJSON = function(json) {
 
   // parse based on initial characters
   while(i < json.length){
-  	console.log(json.length);
   	if (json[i] === '['){	// start an array
 	  	increment();
 	  	var arr = parseArray(subJ(i));
@@ -179,7 +182,6 @@ var parseJSON = function(json) {
   	} else if (json[i] === '{'){
   		increment();
   		var obj = parseObject(subJ(i));
-  		chompChar('}', 'missing } to close object');
   		return obj;
   	} else if (json[i] === '\"'){
   		increment();
