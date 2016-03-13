@@ -45,8 +45,22 @@ var parseJSON = function(json) {
 	  chompChar('\"', 'missing \" before key');
  		var key = parseString(subJ(i));
 	  chompChar(':', 'missing : after key');
+	  //var value = 
   	return obj;
   };
+
+  // function to parse a number, boolean, or string
+  var parseValue = function(firstChar){
+  	if (fistChar === '\"'){
+  		return parseString(subJ(i));
+  	} else if (!isNan(firstChar)){
+  		return parseNumber(subJ(i));
+  	} else if (firstChar === 't' || firstChar === 'f'){
+  		return parseBoolean(subJ(i));
+  	} else if (firstChar === 'n'){
+  		return parseNull(subJ(i));
+  	}
+  }
 
   // function to parse strings
   var parseString = function(strString){
@@ -58,6 +72,19 @@ var parseJSON = function(json) {
   	chompChar('\"', 'missing \" to end string');
   	return str;
   };
+
+
+  var parseNumber = function(numStr){
+  	return numStr;
+  }
+
+  var parseBoolean = function(boolStr){
+  	return true;
+  }
+
+  var parseNull = function(nullStr){
+  	return null;
+  }
 
 
   while(i < json.length){
