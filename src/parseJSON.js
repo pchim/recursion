@@ -104,7 +104,13 @@ var parseJSON = function(json) {
 
   // function to parse a number, boolean, or string
   var parseValue = function(firstChar){
-  	if (firstChar === '\"'){
+  	if (json[i] === '['){	// start an array
+	  	increment();
+	  	return parseArray(subJ(i));
+  	} else if (json[i] === '{'){
+  		increment();
+  		return parseObject(subJ(i));
+  	} else if (firstChar === '\"'){
   		incNoSpace();
   		return parseString(subJ(i));
   	} else if (!isNaN(firstChar) || firstChar === '-'){
@@ -216,19 +222,7 @@ var parseJSON = function(json) {
 
   // parse based on initial characters
   while(i < json.length){
-  	if (json[i] === '['){	// start an array
-	  	increment();
-	  	var arr = parseArray(subJ(i));
-  		return arr;
-  	} else if (json[i] === '{'){
-  		increment();
-  		var obj = parseObject(subJ(i));
-  		return obj;
-  	} else if (json[i] === '\"'){
-  		increment();
-  		var str = parseString(subJ(i));
-  		return str;
-  	}
+  	return parseValue(json[i]);
   	increment();	// reach end of json
   }
 
