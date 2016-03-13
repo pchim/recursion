@@ -9,9 +9,7 @@ var parseJSON = function(json) {
   // increment and ignore all upcoming empty spaces
   var increment = function(){
   	i++;
-  	while(json[i] === ' '){
-  		i++;
-  	}
+  	chompSpace();
   }
 
   // increment w/out chomping spaces
@@ -27,6 +25,13 @@ var parseJSON = function(json) {
   	} else {
   		showError(errorMessage);
   	}
+  }
+
+  // ignore empty spaces not in strings
+  var chompSpace = function(){
+   	while(json[i] === ' '){
+  		i++;
+  	} 	
   }
 
   // helper function to throw an error
@@ -51,7 +56,7 @@ var parseJSON = function(json) {
 	  chompChar('\"', 'missing \" before key');
  		var key = parseString(subJ(i));
 	  chompChar(':', 'missing : after key');
-	  //var value = 
+	  
   	return obj;
   };
 
