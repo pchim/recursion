@@ -48,6 +48,26 @@ var parseJSON = function(json) {
   // function to parse array elements
   var parseArray = function(arrString){
   	var arr = [];
+  	if (json[i] === ']'){
+  		increment();
+  		return arr;
+  	}
+
+  	var element;	// holds array elements
+  	var moreElements = true;	// check if more elements 
+  	while (moreElements) {
+  		element = parseValue(json[i]);
+  		arr.push(element);
+  		chompSpace();
+  		// if more elements, continue w/in this parse loop
+  		if (json[i] === ','){
+  			increment();
+  		} else {
+  			moreElements = false;
+  		}
+  	}
+  	chompSpace();
+	  chompChar(']', 'missing ] to close array');
   	return arr;
   };
 
@@ -79,6 +99,8 @@ var parseJSON = function(json) {
   		return parseBoolean(subJ(i));
   	} else if (firstChar === 'n'){
   		return parseNull(subJ(i));
+  	} else {
+  		showError('unexpected token');
   	}
   }
 
@@ -117,7 +139,6 @@ var parseJSON = function(json) {
   			}
   		} 		
   	}
-
   	// parse only digits
   	while(!isNaN(json[i])){
   		num += json[i];
@@ -134,7 +155,7 @@ var parseJSON = function(json) {
   };
 
 
-
+  // function to parse boolean strings
   var parseBoolean = function(boolStr){
   	var bool = '';
   	var tString = 'true';
@@ -162,6 +183,7 @@ var parseJSON = function(json) {
   	showError('non-boolean string');
   };
 
+  // function to parse null strings
   var parseNull = function(nullStr){
   	var nul = '';
   	var nString = 'null';
@@ -182,7 +204,6 @@ var parseJSON = function(json) {
   	if (json[i] === '['){	// start an array
 	  	increment();
 	  	var arr = parseArray(subJ(i));
-	  	chompChar(']', 'missing ] to close array');
   		return arr;
   	} else if (json[i] === '{'){
   		increment();
