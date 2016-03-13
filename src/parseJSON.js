@@ -6,11 +6,17 @@ var parseJSON = function(json) {
   // your code goes here
   var i = 0;
 
+  // increment and ignore all upcoming empty spaces
   var increment = function(){
   	i++;
   	while(json[i] === ' '){
   		i++;
   	}
+  }
+
+  // increment w/out chomping spaces
+  var incNoSpace = function(){
+  	i++;
   }
 
   // helper function to check character at index === char,
@@ -62,7 +68,7 @@ var parseJSON = function(json) {
   	}
   }
 
-  // function to parse strings
+  // helper function to parse strings
   var parseString = function(strString){
   	var str = '';
   	while(json[i] !== '\"' && i<json.length){
@@ -73,10 +79,41 @@ var parseJSON = function(json) {
   	return str;
   };
 
-
+  // function to parse numbers
   var parseNumber = function(numStr){
-  	return numStr;
+  	var num = '';
+  	var decimalFound = false;
+
+  	// function to check more than one decimal (if any)
+  	var checkDecimals = function(){
+   		if(json[i] === '.'){ // check if char is decimal
+  			if (!decimalFound){	// check if it's first decimal found
+  				num+=json[i];		 // append the decimal
+  				incNoSpace();		 // increment index w/out chomping spaces
+  				decimalFound = true;
+  				if(isNaN(json[i])){		// if not a number after the decimal
+  					showError('missing digits after . ');
+  				} else {
+  					num+=json[i];
+  					incNoSpace();
+  				}
+  			} else {
+  				showError('extra . in number');
+  			}
+  		} 		
+  	}
+
+  	// parse only digits
+  	while(!isNaN(json[i])){
+  		num += json[i];
+  		incNoSpace();
+  		checkDecimals();
+  	}
+
+  	return Number(numStr);
   }
+
+
 
   var parseBoolean = function(boolStr){
   	return true;
@@ -87,6 +124,7 @@ var parseJSON = function(json) {
   }
 
 
+  // parse based on initial characters
   while(i < json.length){
   	console.log(json.length);
   	if (json[i] === '['){	// start an array
