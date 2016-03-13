@@ -141,8 +141,17 @@ var parseJSON = function(json) {
   };
 
   var parseNull = function(nullStr){
-  	return null;
-  }
+  	var nul = '';
+  	var nString = 'null';
+  	for (var j = 0; j < nString.length; j++){
+  		nul += json[i];
+  		incNoSpace();
+  	}
+  	if (nul === nString){
+  		return null;
+  	}
+  	showError('undetermined string');
+  };
 
 
   // parse based on initial characters
