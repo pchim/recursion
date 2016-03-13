@@ -16,7 +16,9 @@ var stringifyJSON = function(obj) {
   var JSONobj = function(obj){
   	var objString = '';
   	for (key in obj){
-  		objString += stringifyJSON(key) + ":" + stringifyJSON(obj[key]) + ',';
+  		if (obj[key] !== undefined && typeof obj[key] !== 'function'){
+  			objString += stringifyJSON(key) + ":" + stringifyJSON(obj[key]) + ',';
+  		}
   	}
   	objString = objString.substring(0,objString.length-1);
   	return objString;
@@ -32,6 +34,8 @@ var stringifyJSON = function(obj) {
   	return obj.toString();
   } else if (typeof obj !== 'function'){
   	return '{' + JSONobj(obj) + '}';
+  } else {
+  	return '';
   }
 
 };
