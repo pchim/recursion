@@ -7,10 +7,15 @@ var parseJSON = function(json) {
   var i = 0;
 
   // function to parse array elements
-  var parseArray = function(arr){
-  	var arrayElements = [];
-  	return arrayElements;
-  }
+  var parseArray = function(arrString){
+  	var arr = [];
+  	return arr;
+  };
+
+  var parseObject = function(objString){
+  	var obj = {};
+  	return obj;
+  };
 
   while(i < json.length){
   	console.log(json.length);
@@ -20,6 +25,13 @@ var parseJSON = function(json) {
   		if (json[i] === ']'){	// if the array closes, return it
   			i++;
   			return arr;
+  		}
+  	} else if (json[i] === '{'){
+  		i++;
+  		var obj = parseObject(json.substring(i,json.length));
+  		if (json[i] === '}'){
+  			i++;
+  			return obj;
   		}
   	}
   	i++;	// reach end of json
