@@ -6,6 +6,13 @@ var parseJSON = function(json) {
   // your code goes here
   var i = 0;
 
+  var increment = function(){
+  	i++;
+  	while(json[i] === ' '){
+  		i++;
+  	}
+  }
+
   // helper function to get the substring from i to end of json
   var subJ = function(index){
   	return json.substring(index,json.length);
@@ -20,6 +27,11 @@ var parseJSON = function(json) {
   // function to parse object elements
   var parseObject = function(objString){
   	var obj = {};
+/*  	var key = parseString(subJ(i));
+  	if (json[i] === ':'){
+  		increment();
+  	}
+ */
   	return obj;
   };
 
@@ -28,12 +40,12 @@ var parseJSON = function(json) {
   	var str = '';
   	while(json[i] !== '\"' && i<json.length){
   		str+=json[i];
-  		i++;
+  		increment();
   	}
   	if (json.charAt(i) !== '\"'){
   		throw(SyntaxError);
   	}
-  	i++;
+  	increment();
   	return str;
   };
 
@@ -41,25 +53,25 @@ var parseJSON = function(json) {
   while(i < json.length){
   	console.log(json.length);
   	if (json[i] === '['){	// start an array
-  		i++;
+  		increment();
   		var arr = parseArray(subJ(i));
   		if (json[i] === ']'){	// if the array closes, return it
-  			i++;
+  			increment();
   			return arr;
   		}
   	} else if (json[i] === '{'){
-  		i++;
+  		increment();
   		var obj = parseObject(subJ(i));
   		if (json[i] === '}'){
-  			i++;
+  			increment();
   			return obj;
   		}
   	} else if (json[i] === '\"'){
-  		i++;
+  		increment();
   		var str = parseString(subJ(i));
   		return str;
   	}
-  	i++;	// reach end of json
+  	increment();	// reach end of json
   }
 
 };
