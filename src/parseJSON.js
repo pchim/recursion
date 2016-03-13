@@ -59,7 +59,7 @@ var parseJSON = function(json) {
   var parseValue = function(firstChar){
   	if (fistChar === '\"'){
   		return parseString(subJ(i));
-  	} else if (!isNan(firstChar)){
+  	} else if (!isNan(firstChar) || firstChar === '-'){
   		return parseNumber(subJ(i));
   	} else if (firstChar === 't' || firstChar === 'f'){
   		return parseBoolean(subJ(i));
@@ -81,7 +81,8 @@ var parseJSON = function(json) {
 
   // function to parse numbers
   var parseNumber = function(numStr){
-  	var num = '';
+  	var num = json[i];
+  	increment();
   	var decimalFound = false;
 
   	// function to check more than one decimal (if any)
